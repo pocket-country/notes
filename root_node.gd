@@ -25,15 +25,13 @@ func _ready():
 	# set up transition sfx
 	click_player.stream = CLICK_SFX
 
-	# For generated root note ...	
-	# Create the AudioStreamGenerator resource
-	var generator_stream = AudioStreamGenerator.new()
-	generator_stream.mix_rate = MIX_RATE
+	#
+	#generator_stream.mix_rate = MIX_RATE
 	# Set the buffer length (lower = less latency, more CPU)
-	generator_stream.buffer_length = 0.05 
+	#generator_stream.buffer_length = 0.05 
 	# Assign the new resource to the player
-	player.stream = generator_stream
-	sample_hz = generator_stream.mix_rate
+	#player.stream = generator_stream
+	#sample_hz = generator_stream.mix_rate
 	
 	# 3. Start playback (This creates the internal 'playback' object)
 	# So I think that because this is hear the tone just plays until we quit ???
@@ -92,7 +90,6 @@ func _process(_delta):
 	for i in range(frames_available):
 		# Calculate the sample value (-1.0 to 1.0)
 		# this is where we are generating the waveform currently sin wave
-		
 		var sample_value: float = sin(phase * TAU)
 		
 		# Push a stereo frame (left and right channel)
