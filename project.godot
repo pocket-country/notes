@@ -18,7 +18,7 @@ config/icon="uid://dl8nbn1pcen1m"
 
 [autoload]
 
-Notes="*res://Notes.gd"
+Theory="*res://Theory.gd"
 
 [input]
 

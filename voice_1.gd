@@ -21,6 +21,17 @@ var _phase: float = 0.0
 # Variable to control the volume/amplitude (0.0 = silence, 1.0 = full volume)
 var _amplitude: float = 0.0
 
+
+func _process(delta: float) -> void:
+	# keep the note going.  Start note does the setup.
+	# put a guard condition on this so it does not try to execute until 
+	# the playback mechanism is in place (multi threading)
+	print(delta)
+	if _playback != null:
+		print("filling buffer")
+		_fill_buffer()
+
+
 # Functions to Control the Note
 # This is what you call to silence the note
 func stop_note():
@@ -29,6 +40,7 @@ func stop_note():
 
 # This is what you call to play the note
 func start_note(frequency: float, target_amplitude: float = 1.0):
+	print("In Start Note")
 	# target_amplitude 1/0 is our note on/off.  Better name?
 	# Gemini gave me a lot of reasons why this is not in a ready function.
 	# Has to do with timing and sync issues, threading ... currently above my pay grade.
@@ -43,20 +55,21 @@ func start_note(frequency: float, target_amplitude: float = 1.0):
 		# Get the hardware's sample rate & set buffer length (affects responsivienes)
 		_sample_hz = stream.mix_rate
 		stream.buffer_length = 0.05
-		# Get the object that lets the script talk to the audio server.
-		_playback = get_stream_playback()
 		
 		# Tell the AudioStreamPlayer to start demanding frames.
-		play()
+		await play()
+		
+			# Get the object that lets the script talk to the audio server.
+		_playback = get_stream_playback()
 		
 	# Set the note parameters.  This happens every time we start a new note
 	# or change a currently playing note
 	_pulse_hz = frequency	# new pitch
 	_phase = 0.0 # Start the wave cleanly at the beginning of its cycle
-	_amplitude = 1.0 # Start playing at full volume (can be customized)
+	_amplitude = target_amplitude # Start playing at full volume (can be customized)
 
 	# Immediately fill the buffer once to prevent glitches.
-	_fill_buffer()
+	#_fill_buffer()
 
 # fill the something buffer with samples - which are just amplitude of the wave at the moment
 func _fill_buffer():

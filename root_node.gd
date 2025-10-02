@@ -6,45 +6,19 @@ const CLICK_SFX = preload("res://keyboard01.ogg")
 @onready var click_player: AudioStreamPlayer2D = $klickPlayer
 
 # Set up the main "root" note
-@onready var player: AudioStreamPlayer2D = $RootNote
-var playback: AudioStreamGeneratorPlayback
-var sample_hz: float
-#var note_hz: float = 440.0 # the frequency of the note we want to play
-var phase: float = 0.0
+@onready var Voice1: AudioStreamPlayer2D = $Voice1
 
 # an evil global variable holding the midi note number of the tone playing
 var current_midi_note: int = 60   # this should be middle C
-
-# Define the sample rate (44100 Hz is standard CD quality)
-const MIX_RATE: float = 44100.0
-
-# Set the current key - this will be a ... humm ... note name? Number?
-
+# and another holding a frequncy for testing
+var tuning_hz: float = 440.0 
 
 func _ready():
 	# set up transition sfx
 	click_player.stream = CLICK_SFX
-
-	#
-	#generator_stream.mix_rate = MIX_RATE
-	# Set the buffer length (lower = less latency, more CPU)
-	#generator_stream.buffer_length = 0.05 
-	# Assign the new resource to the player
-	#player.stream = generator_stream
-	#sample_hz = generator_stream.mix_rate
 	
-	# 3. Start playback (This creates the internal 'playback' object)
-	# So I think that because this is hear the tone just plays until we quit ???
-	player.play()
-	# 4. Get the playback object (it is no longer null)
-	playback = player.get_stream_playback()
-
-	# NOTE: You should confirm playback is not null before continuing, 
-	# but in _ready, it should usually be available right after play().
-	if playback == null:
-		print("ERROR: Failed to get AudioStreamGeneratorPlayback!")
-		set_process(false) # Stop processing if it failed
-
+	# NOTE voice/note stream init moved into that node!
+	Voice1.start_note(tuning_hz)
 
 func _input(event):
 	if event is InputEventKey:
@@ -63,40 +37,15 @@ func _input(event):
 				
 		else: # in a released state?  Actually change the note here
 			if event.keycode == KEY_W:
-				bump_note(1) 
+				#bump_note(1) 
+				print("Bump Note Currently Broken")
 			if event.keycode == KEY_S:
-				bump_note(-1)
+				#bump_note(-1)
+				print("Bump Note Currently Broken")
 
 
 func _process(_delta):
-	# Dont want continuous ... so input handling goes into _input. 
-	# The below is for something like player movement in space.
-	# handle movement keys
-	# Get a Vector2 representing the combined WASD state
-	# This automatically normalizes diagonal input and assigns keys
-	# input_vector.x is A/D (-1.0 to 1.0)
-	# input_vector.y is W/S (-1.0 to 1.0)
-	# var input_vector = Input.get_vector("key_left", "key_right", "key_up", "key_down")
-	# var note_bump = sign(input_vector.y)
-	
-	#tone generation stuff
-	if playback == null:
-		return
-
-	var note_hz = Notes.FREQUENCY_TABLE[current_midi_note]
-	var increment: float = note_hz / sample_hz
-	var frames_available: int = playback.get_frames_available()
-
-	for i in range(frames_available):
-		# Calculate the sample value (-1.0 to 1.0)
-		# this is where we are generating the waveform currently sin wave
-		var sample_value: float = sin(phase * TAU)
-		
-		# Push a stereo frame (left and right channel)
-		playback.push_frame(Vector2.ONE * sample_value)
-		
-		# Advance the phase and wrap it back to 0.0 if it exceeds 1.0
-		phase = fmod(phase + increment, 1.0)
+	pass
 
 
 func bump_note(dir):
@@ -107,10 +56,10 @@ func bump_note(dir):
 	
 	# are you a good witch or a bad witch?
 	if dir == 1:  #up is simple
-		pitch = (pitch + Notes.SCALE_INTERVALS[0][pitch]) % 7  # fix in major mode for now
+		pitch = (pitch + Theory.SCALE_OFFSETS[0][pitch]) % 7  # fix in major mode for now
 	else: # down is more complicated, we have to back up to find the right interval
 		var back_up: int = (pitch - 1 + 7) % 7  # because GG does not think that mod works corrcctly on negative numbers TODO check this
-		pitch = (pitch + Notes.SCALE_INTERVALS[0][back_up]) % 7
+		pitch = (pitch + Theory.SCALE_OFFSETS[0][back_up]) % 7
 			
 	current_midi_note = clamp(get_midi(octave, pitch), 0, 127)
 	print(current_midi_note)
@@ -119,7 +68,7 @@ func bump_note(dir):
 
 func show_note(midi_note):
 	var scale_midi_note: int = midi_note % 12
-	var scale_note_name: String = Notes.NOTE_NAME[scale_midi_note]
+	var scale_note_name: String = Theory.NOTE_NAME[scale_midi_note]
 	# TODO this is a kludge.  Will want to set it up so we write 
 	# into one of three note lable slots ... 
 	$UIRoot/Background/MarginContainer/VBoxContainer/Row1/Label.text = scale_note_name
