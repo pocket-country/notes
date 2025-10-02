@@ -7,7 +7,8 @@ const CLICK_SFX = preload("res://keyboard01.ogg")
 
 # Set up the main "root" note
 @onready var Voice1: AudioStreamPlayer2D = $Voice1
-
+@onready var Voice2: AudioStreamPlayer2D = $Voice2
+@onready var Voice3: AudioStreamPlayer2D = $Voice3
 # an evil global variable holding the midi note number of the tone playing
 var current_midi_note: int = 60   # this should be middle C
 # and another holding a frequncy for testing
@@ -20,6 +21,11 @@ func _ready():
 	# NOTE voice/note stream init moved into that node!
 	Voice1.start_note(tuning_hz)
 
+
+func _process(delta):
+	pass
+	
+	
 func _input(event):
 	if event is InputEventKey:
 		if event.pressed and not event.echo:
@@ -39,13 +45,11 @@ func _input(event):
 			if event.keycode == KEY_W:
 				#bump_note(1) 
 				print("Bump Note Currently Broken")
+				Voice2.start_note(tuning_hz * 2.0)
 			if event.keycode == KEY_S:
 				#bump_note(-1)
 				print("Bump Note Currently Broken")
-
-
-func _process(_delta):
-	pass
+				Voice3.start_note(tuning_hz * 0.5)
 
 
 func bump_note(dir):

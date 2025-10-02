@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dcr5rjn5re74p"]
 
 [ext_resource type="Script" uid="uid://dklg7vvh3imyf" path="res://root_node.gd" id="1_v0vck"]
-[ext_resource type="Script" uid="uid://b1xigmdpg1mfr" path="res://voice_1.gd" id="2_52tyj"]
+[ext_resource type="Script" uid="uid://b1xigmdpg1mfr" path="res://SynthNote.gd" id="2_52tyj"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_oetci"]
 
@@ -9,6 +9,14 @@
 script = ExtResource("1_v0vck")
 
 [node name="Voice1" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamGenerator_oetci")
+script = ExtResource("2_52tyj")
+
+[node name="Voice2" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamGenerator_oetci")
+script = ExtResource("2_52tyj")
+
+[node name="Voice3" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource("AudioStreamGenerator_oetci")
 script = ExtResource("2_52tyj")
 

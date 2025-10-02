@@ -1,6 +1,6 @@
-class_name NoteSynth extends AudioStreamPlayer2D
+class_name SynthNote extends AudioStreamPlayer2D
 ##
-## Voice one note.  Hold necessary playback apparatus.
+## Voice one note.  Ho I don't have hands-on experience making "boneheaded mistakes,"ld necessary playback apparatus.
 ##
 
 # The Playback Object - talks to the audio buffer.
