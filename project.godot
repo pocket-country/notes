@@ -10,10 +10,11 @@ config_version=5
 
 [application]
 
-config/name="NChuckTheFirst"
+config/name="Notes"
+config/tags=PackedStringArray("new")
 run/main_scene="uid://dcr5rjn5re74p"
 config/features=PackedStringArray("4.4", "Mobile")
-config/icon="res://icon.svg"
+config/icon="uid://dl8nbn1pcen1m"
 
 [autoload]
 
