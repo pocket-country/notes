@@ -19,6 +19,7 @@ config/icon="uid://dl8nbn1pcen1m"
 [autoload]
 
 Theory="*res://Theory.gd"
+PlayContext="*res://PlayContext.gd"
 
 [input]
 

@@ -5,13 +5,14 @@ extends Node
 const CLICK_SFX = preload("res://keyboard01.ogg") 
 @onready var click_player: AudioStreamPlayer2D = $klickPlayer
 
-# Set up the main "root" note
+# Set up the main "root" notes, for a three note chord
 @onready var Voice1: AudioStreamPlayer2D = $Voice1
 @onready var Voice2: AudioStreamPlayer2D = $Voice2
 @onready var Voice3: AudioStreamPlayer2D = $Voice3
-# an evil global variable holding the midi note number of the tone playing
-var current_midi_note: int = 60   # this should be middle C
-# and another holding a frequncy for testing
+
+# an evil global variable holding midi note number & freq 
+# for now, for testing, when not usin the voice articulation nodes
+var current_midi_note: int = 69   # A4 for tuning
 var tuning_hz: float = 440.0 
 
 func _ready():
@@ -76,22 +77,3 @@ func show_note(midi_note):
 	# TODO this is a kludge.  Will want to set it up so we write 
 	# into one of three note lable slots ... 
 	$UIRoot/Background/MarginContainer/VBoxContainer/Row1/Label.text = scale_note_name
-
-## handle note composition/decompositon
-
-# return the octave number for a midi note.  Off by 1, what musicians call "4" will be a "5"?
-func get_octave(midi_number) -> int:
-	return floor(midi_number/12)
-
-# and the companion decompositoin, the pitch within the octave
-func get_pitch(midi_number) -> int:
-	return midi_number % 12
-
-#combine pitch and octave to get back the midi number
-func get_midi(octave, pitch) -> int:
-	return (octave * 12 ) + pitch
-
-
-
-
-	
