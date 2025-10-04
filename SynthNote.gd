@@ -5,6 +5,7 @@ class_name SynthNote extends AudioStreamPlayer2D
 
 # The Playback Object - talks to the audio buffer.
 var _playback: AudioStreamGeneratorPlayback
+
 # Sample Rate: The hardware's speed (e.g., 44100 Hz).
 # Set by the stream generator (can change in editor)
 var _sample_hz: float
@@ -26,9 +27,9 @@ func _process(delta: float) -> void:
 	# keep the note going.  Start note does the setup.
 	# put a guard condition on this so it does not try to execute until 
 	# the playback mechanism is in place (multi threading)
-	print(delta)
+	#print(delta)
 	if _playback != null:
-		print("filling buffer")
+		#print("filling buffer")
 		_fill_buffer()
 
 

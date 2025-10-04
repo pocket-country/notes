@@ -44,7 +44,10 @@ func set_note(midi_number: int):
 #
 ## Functions to return values (getters)
 func get_freq() -> int:
-	return(freq) 
+	return(freq)
+
+func get_octave() -> int:
+	return(octave)
 
 func get_chromatic_name() -> String:
 	return(name)

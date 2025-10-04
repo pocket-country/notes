@@ -1,4 +1,5 @@
 extends Node
+# --- RootNode (root_node.gd) --- Application Root
 
 # Set up for  keyboard click sound effect for note transition
 # Attribution:  Thanks to https://opengameart.org/users/bluszcz for this:
@@ -29,13 +30,21 @@ func _process(delta):
 	
 func _input(event):
 	if event is InputEventKey:
-		if event.pressed and not event.echo:
-			if event.keycode == KEY_W or event.keycode == KEY_S:
+		
+		print("Keycode: %d, key label: %s" % [event.keycode, OS.get_keycode_string(event.keycode)])
+		print("  Pressed: %s" % [event.pressed])
+		print("  Echo: %s" % [event.echo])
+		print("-")
+		
+		if event.pressed:
+			if not event.echo and (event.keycode == KEY_W or event.keycode == KEY_S):
 				# 'gear shift' note change sound
 				click_player.play() 
+				
 			if event.keycode == KEY_Q:
 				get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
-				get_tree().quit
+				get_tree().quit()
+				
 			if event.keycode == KEY_V:
 					if event.shift_pressed:
 						print("Raising Volume --- not implemented yet")
@@ -53,27 +62,8 @@ func _input(event):
 				Voice3.start_note(tuning_hz * 0.5)
 
 
-func bump_note(dir):
-	# up and down a musical vs chromatic scale is a bit trickier
-	# decompose into an octave and a pitch
-	var pitch: int = get_pitch(current_midi_note)
-	var octave: int = get_octave(current_midi_note)
+func show_note(voice: AudioStreamPlayer2D, slot: Label) -> void:
 	
-	# are you a good witch or a bad witch?
-	if dir == 1:  #up is simple
-		pitch = (pitch + Theory.SCALE_OFFSETS[0][pitch]) % 7  # fix in major mode for now
-	else: # down is more complicated, we have to back up to find the right interval
-		var back_up: int = (pitch - 1 + 7) % 7  # because GG does not think that mod works corrcctly on negative numbers TODO check this
-		pitch = (pitch + Theory.SCALE_OFFSETS[0][back_up]) % 7
-			
-	current_midi_note = clamp(get_midi(octave, pitch), 0, 127)
-	print(current_midi_note)
-	show_note(current_midi_note)
-
-
-func show_note(midi_note):
-	var scale_midi_note: int = midi_note % 12
-	var scale_note_name: String = Theory.NOTE_NAME[scale_midi_note]
-	# TODO this is a kludge.  Will want to set it up so we write 
-	# into one of three note lable slots ... 
-	$UIRoot/Background/MarginContainer/VBoxContainer/Row1/Label.text = scale_note_name
+	var scale_note_name: String = voice.get_chromatic_name()
+	slot.text = scale_note_name
+	

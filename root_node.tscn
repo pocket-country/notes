@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dcr5rjn5re74p"]
+[gd_scene load_steps=5 format=3 uid="uid://dcr5rjn5re74p"]
 
 [ext_resource type="Script" uid="uid://dklg7vvh3imyf" path="res://root_node.gd" id="1_v0vck"]
 [ext_resource type="Script" uid="uid://b1xigmdpg1mfr" path="res://SynthNote.gd" id="2_52tyj"]
+[ext_resource type="Texture2D" uid="uid://dl8nbn1pcen1m" path="res://Gemini_Generated_Image_ekhl09ekhl09ekhl.png" id="3_oetci"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_oetci"]
 
@@ -39,7 +40,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.999999, 0.99142, 0.664144, 1)
+color = Color(1, 0.996078, 0.94902, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UIRoot/Background"]
 layout_mode = 1
@@ -55,78 +56,95 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UIRoot/Background/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
 
-[node name="Row1" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
+[node name="TitleBar" type="MarginContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row1"]
-custom_minimum_size = Vector2(50, 50)
+[node name="HBoxContainer" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/TitleBar"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 26
-text = "--"
+
+[node name="Title" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/TitleBar/HBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.129302, 0.375447, 0.995093, 1)
+theme_override_colors/font_outline_color = Color(0.286831, 0.000500512, 0.411767, 1)
+theme_override_font_sizes/font_size = 50
+text = "Notes!"
+horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row1"]
-custom_minimum_size = Vector2(50, 50)
+[node name="Logo" type="TextureRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/TitleBar/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-color = Color(0.897554, 0.000655348, 0.898622, 1)
+size_flags_horizontal = 8
+texture = ExtResource("3_oetci")
+expand_mode = 3
 
-[node name="Row2" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
+[node name="Display" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row2"]
-custom_minimum_size = Vector2(50, 50)
+[node name="NotePanel" type="MarginContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display"]
 layout_mode = 2
-text = "--"
+size_flags_horizontal = 3
 
-[node name="ColorRect" type="ColorRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row2"]
-custom_minimum_size = Vector2(50, 50)
+[node name="VBoxContainer" type="VBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel"]
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-color = Color(0.897554, 0.000655348, 0.898622, 1)
 
-[node name="Row3" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 0
 
-[node name="Label" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row3"]
-custom_minimum_size = Vector2(50, 50)
+[node name="HBoxContainer" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel/VBoxContainer/MarginContainer"]
 layout_mode = 2
-text = "--"
 
-[node name="ColorRect" type="ColorRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row3"]
-custom_minimum_size = Vector2(50, 50)
+[node name="ColorRect" type="ColorRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel/VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-color = Color(0.897554, 0.000655348, 0.898622, 1)
 
-[node name="Row4" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel/VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 0
 
-[node name="ColorRect" type="ColorRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row4"]
-custom_minimum_size = Vector2(50, 50)
+[node name="Label2" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel/VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-color = Color(0.104191, 3.85046e-07, 0.692485, 1)
 
-[node name="Row5" type="HBoxContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/NotePanel/VBoxContainer/MarginContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 0
 
-[node name="KeyIs" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row5"]
-custom_minimum_size = Vector2(50, 50)
+[node name="InfoPanel" type="MarginContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display"]
 layout_mode = 2
-text = "Key Is: "
+size_flags_horizontal = 8
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
 
-[node name="KeyLabel" type="Label" parent="UIRoot/Background/MarginContainer/VBoxContainer/Row5"]
+[node name="ColorRect" type="ColorRect" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/InfoPanel"]
 layout_mode = 2
+color = Color(0.231373, 0.231373, 0.231373, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/InfoPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="InfoBox" type="RichTextLabel" parent="UIRoot/Background/MarginContainer/VBoxContainer/Display/InfoPanel/MarginContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 20
+theme_override_font_sizes/italics_font_size = 20
+theme_override_font_sizes/mono_font_size = 20
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+text = "q/s => Pitch up/down
+V/v  =>  Volume up/down
+q => Quit
+1, 2, 3 => Toggle chord voice"
+fit_content = true
+scroll_active = false

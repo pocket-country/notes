@@ -63,5 +63,5 @@ func _draw():
 	draw_line(Vector2(marker_x, 0), Vector2(marker_x, size.y), Color.RED, 2.0)
 	
 	# Draw the parameter name
-	draw_string(get_theme_default_font(), Vector2(5, 15), parameter_name, Color.WHITE)
-	draw_string(get_theme_default_font(), Vector2(5, size.y - 5), str(snappedf(knob_value, 0.01)), Color.YELLOW)
+	#draw_string(get_theme_default_font(), Vector2(5, 15), parameter_name, Color.WHITE)
+	#draw_string(get_theme_default_font(), Vector2(5, size.y - 5), str(snappedf(knob_value, 0.01)), Color.YELLOW)
