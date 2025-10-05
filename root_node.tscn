@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dcr5rjn5re74p"]
+[gd_scene load_steps=6 format=3 uid="uid://dcr5rjn5re74p"]
 
 [ext_resource type="Script" uid="uid://dklg7vvh3imyf" path="res://root_node.gd" id="1_v0vck"]
 [ext_resource type="Script" uid="uid://b1xigmdpg1mfr" path="res://SynthNote.gd" id="2_52tyj"]
 [ext_resource type="Texture2D" uid="uid://dl8nbn1pcen1m" path="res://Gemini_Generated_Image_ekhl09ekhl09ekhl.png" id="3_oetci"]
+[ext_resource type="Script" uid="uid://daybpmkwfsxs3" path="res://spectrum.gd" id="4_qyxd3"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_oetci"]
 
@@ -215,6 +216,18 @@ theme_override_font_sizes/font_size = 30
 text = "123.45 hz"
 vertical_alignment = 1
 
+[node name="SubViewportContainer" type="SubViewportContainer" parent="UIRoot/BG/MC/VBox/Display/NotePanel/VBox"]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="UIRoot/BG/MC/VBox/Display/NotePanel/VBox/SubViewportContainer"]
+size = Vector2i(792, 200)
+
+[node name="Spectrum" type="Node2D" parent="UIRoot/BG/MC/VBox/Display/NotePanel/VBox/SubViewportContainer/SubViewport"]
+script = ExtResource("4_qyxd3")
+
 [node name="InfoPanel" type="MarginContainer" parent="UIRoot/BG/MC/VBox/Display"]
 layout_mode = 2
 size_flags_horizontal = 8
@@ -242,9 +255,10 @@ theme_override_font_sizes/italics_font_size = 20
 theme_override_font_sizes/mono_font_size = 20
 theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 20
-text = "q/s => Pitch up/down
-V/v  =>  Volume up/down
-q => Quit
-1, 2, 3 => Toggle chord voice"
+text = " w/s => Pitch up/down
+ V/v  =>  Volume up/down
+ q => Quit
+ 1, 2, 3 => Toggle chord voice
+  (root, 3rd, 5th)"
 fit_content = true
 scroll_active = false
