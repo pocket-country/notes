@@ -125,6 +125,9 @@ func _input(event):
 				Voice1.bump_chromatic(-1) 
 				Voice2.bump_chromatic(-1)
 				Voice3.bump_chromatic(-1)
+				Voice1.start_note(Chord_root.get_freq()) 
+				Voice2.start_note(Chord_3rd.get_freq())
+				Voice3.start_note(Chord_5th.get_freq())
 				# for testing Voice3.start_note(tuning_hz * 0.5)
 
 
