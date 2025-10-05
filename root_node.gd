@@ -69,11 +69,31 @@ func _input(event):
 		print("  Echo: %s" % [event.echo])
 		print("-")
 		
-		if event.pressed:
-			if not event.echo and (event.keycode == KEY_W or event.keycode == KEY_S):
-				# 'gear shift' note change sound
-				click_player.play() 
-				
+		# We had this set up to generate mechanical noise when switching notes, etc.
+		# by playing a sound effect on press and making the change on release.
+		# This was fun, but decided (for branch no-mech-noise) to take it out.
+		# Leaving some of the unused infrastructure in place ... maybe when I make 
+		# visual switches I will build it back out more fully.  A rusty door for key switches, etc.
+		
+		if event.pressed and not event.echo:
+			
+			# NOTE we always operate on all the voices so they stay in sync 
+			if event.keycode == KEY_W:
+				Chord_root.bump_chromatic(+1)
+				Chord_3rd.bump_chromatic(+1)
+				Chord_5th.bump_chromatic(+1)
+				Voice1.start_note(Chord_root.get_freq()) 
+				Voice2.start_note(Chord_3rd.get_freq())
+				Voice3.start_note(Chord_5th.get_freq())
+			
+			if event.keycode == KEY_S:
+				Voice1.bump_chromatic(-1) 
+				Voice2.bump_chromatic(-1)
+				Voice3.bump_chromatic(-1)
+				Voice1.start_note(Chord_root.get_freq()) 
+				Voice2.start_note(Chord_3rd.get_freq())
+				Voice3.start_note(Chord_5th.get_freq())
+			
 			if event.keycode == KEY_Q:
 				get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 				get_tree().quit()
@@ -109,26 +129,7 @@ func _input(event):
 				else:
 					Voice3.on()
 					slots[2].get_node("Box/OnOff").color = Color("#FFA07A")
-			
-				
-		else: # in a released state?  Actually change the note here
-			# NOTE we always operate on all the voices so they stay in sync 
-			if event.keycode == KEY_W:
-				Chord_root.bump_chromatic(+1)
-				Chord_3rd.bump_chromatic(+1)
-				Chord_5th.bump_chromatic(+1)
-				Voice1.start_note(Chord_root.get_freq()) 
-				Voice2.start_note(Chord_3rd.get_freq())
-				Voice3.start_note(Chord_5th.get_freq())
-				# for testing Voice2.start_note(tuning_hz * 2.0)
-			if event.keycode == KEY_S:
-				Voice1.bump_chromatic(-1) 
-				Voice2.bump_chromatic(-1)
-				Voice3.bump_chromatic(-1)
-				Voice1.start_note(Chord_root.get_freq()) 
-				Voice2.start_note(Chord_3rd.get_freq())
-				Voice3.start_note(Chord_5th.get_freq())
-				# for testing Voice3.start_note(tuning_hz * 0.5)
+		# else: # in a released state?  Actually change the note here - UNUSED SEE COMMENT ABOVE
 
 
 func show_note(voice: AudioStreamPlayer2D, slot: Label) -> void:

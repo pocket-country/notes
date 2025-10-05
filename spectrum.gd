@@ -3,7 +3,7 @@ extends Node2D
 # --- https://godotengine.org/asset-library/asset/2762
 
 # TODO add FREQ_MIN ~ 20 hz
-const VU_COUNT = 16
+const VU_COUNT = 32
 const FREQ_MAX = 4096 #11050.0
 
 const WIDTH = 792
