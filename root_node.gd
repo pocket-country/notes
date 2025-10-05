@@ -80,9 +80,9 @@ func _input(event):
 			
 			if event.keycode == KEY_V:
 					if event.shift_pressed:
-						print("Raising Volume --- not implemented yet")
+						PlayContext.adjust_volume(+0.06)
 					else:
-						print("Lowering Volume --- not impemented yet")
+						PlayContext.adjust_volume(-0.06)
 			
 			# turn on/of notes in the chord
 			# TODO outline for labels when we get to it #222222
