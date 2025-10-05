@@ -1,4 +1,4 @@
-class_name anote extends Resource
+class_name ANote extends Resource
 # --- A class for a single note.  All the data, all the methods to go from this to that
 
 @export var midi_note_number: int	# 0 - 127
@@ -43,7 +43,7 @@ func set_note(midi_number: int):
 
 #
 ## Functions to return values (getters)
-func get_freq() -> int:
+func get_freq() -> float:
 	return(freq)
 
 func get_octave() -> int:
@@ -65,7 +65,7 @@ func bump_chromatic(dir: int) -> int:   # or should I return a freq?  Or bump an
 
 func bump_diatonic(dir: int) -> int:
 	var new_pitch = (diatonic_pitch + dir) % 7
-	var key_offset = some_lookup
+	var key_offset = 0 # this is wrong we need some_lookup
 	var new_note = octave + key_offset + Theory.SCALE_OFFSETS[Theory.MODE_MAJOR][new_pitch]
 	set_note(new_note)  # should be +/- one, should I check?
 	return(midi_note_number)

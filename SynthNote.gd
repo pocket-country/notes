@@ -1,6 +1,6 @@
 class_name SynthNote extends AudioStreamPlayer2D
 ##
-## Voice one note.  Ho I don't have hands-on experience making "boneheaded mistakes,"ld necessary playback apparatus.
+## Voice one note.  
 ##
 
 # The Playback Object - talks to the audio buffer.
@@ -10,6 +10,7 @@ var _playback: AudioStreamGeneratorPlayback
 # Set by the stream generator (can change in editor)
 var _sample_hz: float
 
+## These three parameters control the actual sound waveform
 # Wave Frequency: The pitch we want to hear (e.g., 440 Hz).  
 # Called pulse cause we are geeks
 var _pulse_hz: float
@@ -23,26 +24,33 @@ var _phase: float = 0.0
 var _amplitude: float = 0.0
 
 
-func _process(delta: float) -> void:
-	# keep the note going.  Start note does the setup.
+func _process(_delta: float) -> void:
+	# keep the note going.  Start note does the setup (and change control).
 	# put a guard condition on this so it does not try to execute until 
 	# the playback mechanism is in place (multi threading)
-	#print(delta)
 	if _playback != null:
-		#print("filling buffer")
 		_fill_buffer()
 
 
-# Functions to Control the Note
+# Functions to Control the Note 
 # This is what you call to silence the note
-func stop_note():
+# It keeps the whole waveform thing rolling along, just mods it to be zero volume
+func off():
 	_amplitude = 0.0
 	# Optional: You could fade out here for a smoother stop
 
-# This is what you call to play the note
-func start_note(frequency: float, target_amplitude: float = 1.0):
+func on():
+	_amplitude = 1.0
+
+func sounding() -> bool:
+	return _amplitude > 0
+
+
+# This is what you call to play the note - both initially 
+# and when changing sound parameters
+func start_note(target_frequency: float, target_amplitude = null, target_phase = null):
+	# amp & phase should be floats, not typing them so can handle default of null
 	print("In Start Note")
-	# target_amplitude 1/0 is our note on/off.  Better name?
 	# Gemini gave me a lot of reasons why this is not in a ready function.
 	# Has to do with timing and sync issues, threading ... currently above my pay grade.
 	# but still, some stuff only happens once ... 
@@ -58,19 +66,23 @@ func start_note(frequency: float, target_amplitude: float = 1.0):
 		stream.buffer_length = 0.05
 		
 		# Tell the AudioStreamPlayer to start demanding frames.
-		await play()
+		play()
 		
 			# Get the object that lets the script talk to the audio server.
 		_playback = get_stream_playback()
 		
 	# Set the note parameters.  This happens every time we start a new note
-	# or change a currently playing note
-	_pulse_hz = frequency	# new pitch
-	_phase = 0.0 # Start the wave cleanly at the beginning of its cycle
-	_amplitude = target_amplitude # Start playing at full volume (can be customized)
+	# or change a currently playing note.  The fill buffer process just keeps 
+	# generating frames in the background with whatever we set here.
+	
+	#  amp & phase params default to null ==> no change
+	_pulse_hz = target_frequency
+	if target_amplitude != null:
+		_amplitude = target_amplitude
+	
+	if target_phase != null:
+		_phase = target_phase
 
-	# Immediately fill the buffer once to prevent glitches.
-	#_fill_buffer()
 
 # fill the something buffer with samples - which are just amplitude of the wave at the moment
 func _fill_buffer():
@@ -86,7 +98,7 @@ func _fill_buffer():
 	for i in range(frames_available):
 		
 		# Calculate the raw sample value
-		# This is where we would implement something other than a pure sine wave tone
+		##  NOTE This is where we would implement something other than a pure sine wave tone
 		var raw_sample = sin(_phase * TAU)
 		
 		# APPLY THE AMPLITUDE (This is the key step!)

@@ -43,14 +43,12 @@ const SCALE_OFFSETS = [
 ]
 
 
-func _ready():
-	# To get the frequency of Middle C (MIDI 60) in your audio generator:
-	# var c4_freq = Notes.FREQUENCY_TABLE[60] # Simple, fast lookup
-	
-	# Loop through the relevant MIDI range (0 to 127)
+func _init():
+	# Loop through MIDI note number range (0 to 127) and calculate the korrect frequecy
 	for midi_note in range(MAX_MIDI_NOTE + 1):  #range does not include limit hence + 1
+		
 		# Calculate 'n': the number of half steps away from A4 (MIDI 69)
-		var n = midi_note - MIDI_NOTE_A4
+		var n: float = midi_note - MIDI_NOTE_A4
 		
 		# Calculate the frequency using the exponential formula
 		var frequency = A4_FREQ * pow(TWELFTH_ROOT_OF_TWO, n)

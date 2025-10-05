@@ -108,7 +108,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
-color = Color(0.831373, 0.792157, 0.639216, 1)
+color = Color(0.949621, 0.746621, 0.23147, 1)
 
 [node name="Pitch" type="Label" parent="UIRoot/BG/MC/VBox/Display/NotePanel/VBox/Slot1/Box"]
 custom_minimum_size = Vector2(100, 100)
