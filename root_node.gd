@@ -15,9 +15,12 @@ const CLICK_SFX = preload("res://keyboard01.ogg")
 var slots = []
 
 # Generate the inital note resource/objects
-var Chord_root = ANote.new(69)		# A4
-var Chord_3rd = ANote.new(73)		# C#5
-var Chord_5th = ANote.new(76)		# E5
+var Chord_root = ANote.new(60)		# C4  A4
+var Chord_3rd = ANote.new(64)		# E4  C#5
+var Chord_5th = ANote.new(67)		# G4  E5
+
+# put 'em in an array for easy reference when updating display ...
+var chord_notes = []
 
 # an evil global variable holding midi note number & freq 
 # Set to A4 for tuning, currently app starts voicing this note.
@@ -33,6 +36,11 @@ func _ready():
 	slots.append($UIRoot/BG/MC/VBox/Display/NotePanel/VBox/Slot2)
 	slots.append($UIRoot/BG/MC/VBox/Display/NotePanel/VBox/Slot3)
 	
+	# put 'em in an array for easy reference when updating display ...
+	chord_notes.append(Chord_root)
+	chord_notes.append(Chord_3rd)
+	chord_notes.append(Chord_5th)
+
 	# start making noise
 	# NOTE voice/note stream init moved into synth note (a mod of audio player) node!
 	# NOTE we are only turning on the root, the others off via the amp. parameter
@@ -59,15 +67,15 @@ a real solution, we would turn to the ChucK musical programming system.
 	slots[1].get_node("Box/OnOff").color = Color("#D4CAA3")
 	Voice3.start_note(Chord_5th.get_freq(), 0.0, 0.0)
 	slots[2].get_node("Box/OnOff").color = Color("#D4CAA3")
-
+	update_note_display()
 
 func _input(event):
 	if event is InputEventKey:
 		
-		print("Keycode: %d, key label: %s" % [event.keycode, OS.get_keycode_string(event.keycode)])
-		print("  Pressed: %s" % [event.pressed])
-		print("  Echo: %s" % [event.echo])
-		print("-")
+		#print("Keycode: %d, key label: %s" % [event.keycode, OS.get_keycode_string(event.keycode)])
+		#print("  Pressed: %s" % [event.pressed])
+		#print("  Echo: %s" % [event.echo])
+		#print("-")
 		
 		# We had this set up to generate mechanical noise when switching notes, etc.
 		# by playing a sound effect on press and making the change on release.
@@ -79,20 +87,38 @@ func _input(event):
 			
 			# NOTE we always operate on all the voices so they stay in sync 
 			if event.keycode == KEY_W:
-				Chord_root.bump_chromatic(+1)
-				Chord_3rd.bump_chromatic(+1)
-				Chord_5th.bump_chromatic(+1)
+				if PlayContext.active_scale_mode == PlayContext.SCALE_CHROMATIC:
+					Chord_root.bump_chromatic(+1)
+					Chord_3rd.bump_chromatic(+1)
+					Chord_5th.bump_chromatic(+1)
+				
+				if PlayContext.active_scale_mode == PlayContext.SCALE_DIATONIC:
+					Chord_root.bump_diatonic(+1)
+					Chord_3rd.bump_diatonic(+1)
+					Chord_5th.bump_diatonic(+1)
+					
 				Voice1.start_note(Chord_root.get_freq()) 
 				Voice2.start_note(Chord_3rd.get_freq())
 				Voice3.start_note(Chord_5th.get_freq())
+				
+				update_note_display()
 			
 			if event.keycode == KEY_S:
-				Voice1.bump_chromatic(-1) 
-				Voice2.bump_chromatic(-1)
-				Voice3.bump_chromatic(-1)
+				if PlayContext.active_scale_mode == PlayContext.SCALE_CHROMATIC:
+					Chord_root.bump_chromatic(-1) 
+					Chord_3rd.bump_chromatic(-1)
+					Chord_5th.bump_chromatic(-1)
+				
+				if PlayContext.active_scale_mode == PlayContext.SCALE_DIATONIC:
+					Chord_root.bump_diatonic(-1) 
+					Chord_3rd.bump_diatonic(-1)
+					Chord_5th.bump_diatonic(-1)
+					
 				Voice1.start_note(Chord_root.get_freq()) 
 				Voice2.start_note(Chord_3rd.get_freq())
 				Voice3.start_note(Chord_5th.get_freq())
+				
+				update_note_display()
 			
 			if event.keycode == KEY_Q:
 				get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
@@ -132,8 +158,21 @@ func _input(event):
 		# else: # in a released state?  Actually change the note here - UNUSED SEE COMMENT ABOVE
 
 
-func show_note(voice: AudioStreamPlayer2D, slot: Label) -> void:
+func update_note_display() -> void:
+	var solfeg: String
+	var note_name: String
 	
-	var scale_note_name: String = voice.get_chromatic_name()
-	slot.text = scale_note_name
-	
+	for s in range(3):
+		note_name = chord_notes[s].get_chromatic_name()
+		if note_name.length() == 1:
+			note_name = note_name + " "
+		
+		if PlayContext.active_scale_mode == PlayContext.SCALE_CHROMATIC:
+			solfeg = "--"
+			
+		if PlayContext.active_scale_mode == PlayContext.SCALE_DIATONIC:
+			solfeg = chord_notes[s].get_solfeg_name()
+			
+		slots[s].get_node("Box/Pitch").text = "%s [%d]" % [note_name, chord_notes[s].get_octave()]
+		slots[s].get_node("Box/Sof").text = solfeg
+		slots[s].get_node("Box/Freq").text = "%.3f" % [chord_notes[s].get_freq()]

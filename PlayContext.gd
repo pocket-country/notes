@@ -3,16 +3,22 @@ extends Node
 # Global context vars for sound play, things like key, mix, volume
 
 # These two variables define the key we are currently playing in 
-var active_key_mode: int = Theory.MODE_MAJOR
+var active_key_mode: int
 var active_key_tonic: int	# range 0 - 11, MIDI note number normalized to octave independent offset
 
 var master_bus_volume: float  	# range 0 - 1, converted to DB by audio bus function
 
+# Define increment for bumping notes up and down
+# Are we walking the chormatic or diatonic scale?
+const SCALE_DIATONIC = 0
+const SCALE_CHROMATIC = 1
+var active_scale_mode: int
 
 func _init():
 	active_key_mode = Theory.MODE_MAJOR
 	active_key_tonic = 0
 	master_bus_volume = 0.75
+	active_scale_mode = SCALE_DIATONIC
 	
 # for display
 func get_key_mode_name() -> String:

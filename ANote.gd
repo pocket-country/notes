@@ -11,11 +11,11 @@ var freq: float		# assume equal temperament tuning
 var octave: int		
 
 # for our (not often used) chromatic or half tone scales
-var chromatic_pitch: int	# or offset
+var chromatic_pitch: int	# or offset 0..11 index into semi-tone within a given octave scale
 var name: String
 
 # for our diatonic scales
-var diatonic_pitch: int		# or offset
+var diatonic_pitch: int		# or offset 0..7, index into diatonic scale pitch offset lookup table
 var solf: String			# name for diatonic pitch
 
 func _init(init_midi_note: int):
@@ -31,7 +31,7 @@ func set_note(midi_number: int):
 		
 	# set up cached lookup values
 	freq = Theory.FREQUENCY_TABLE[midi_number]
-	octave = floor(midi_number - 12 / 12)
+	octave = floor((midi_number - 12) / 12)
 	
 	chromatic_pitch = midi_number % 12
 	name = Theory.NOTE_NAME[chromatic_pitch]
@@ -64,8 +64,18 @@ func bump_chromatic(dir: int) -> int:   # or should I return a freq?  Or bump an
 
 
 func bump_diatonic(dir: int) -> int:
-	var new_pitch = (diatonic_pitch + dir) % 7
-	var key_offset = 0 # this is wrong we need some_lookup
-	var new_note = octave + key_offset + Theory.SCALE_OFFSETS[Theory.MODE_MAJOR][new_pitch]
-	set_note(new_note)  # should be +/- one, should I check?
+	# we can re-use the scale offset lookup table for key
+	var key_offset = Theory.SCALE_OFFSETS[Theory.MODE_MAJOR][PlayContext.active_key_tonic]
+	
+	var trial_pitch = diatonic_pitch + dir
+	var new_pitch = posmod(trial_pitch, 7)
+	var pitch_offset = Theory.SCALE_OFFSETS[Theory.MODE_MAJOR][new_pitch]
+	
+	# TODO there is a bug in this line of code.
+	var new_octave = octave + floor(trial_pitch/7)
+
+	# add up all the offsets to get new midi note number
+	print("Bump Diatonic offsets: Octave: %d  Key: %d  Pitch: %d" % [new_octave, key_offset, pitch_offset])
+	var new_note = ((new_octave + 1) * 12) + key_offset + pitch_offset
+	set_note(new_note)
 	return(midi_note_number)
